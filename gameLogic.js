@@ -48,27 +48,44 @@ function playRound(humanChoice, computerChoice) {
 }
 
 function playGame() {
-    for (i = 0; i < 5; i++) {
+    let round = 1;
 
-        let humanChoice = getHumanChoice();
-        let computerChoice = getComputerChoice();
-        let result = playRound(humanChoice, computerChoice);
-
-        console.log(`Round ${i + 1}`);
-        console.log(`Your choice: ${humanChoice}`);
-        console.log(`Computer choice: ${computerChoice}`);
-        console.log(result);
-
-        if (result === "You win!") {
-            humanScore += 1;
-        } else if ( result === "Computer wins!") {
-            computerScore += 1;
-        } else {
-            i--;
-        }
-         console.log(`Current score: You: ${humanScore} | Computer: ${computerScore}\n************************************`);
+function playNextRound() {
+    if (humanScore === 3 || computerScore === 3) {
+        const winner = humanScore === 3 ? "You are the winner!" : "Computer is the winner!";
+        console.log(`Game over! ${winner}`);
+        console.log(`Final results are:\n| Your score: ${humanScore} | Computer score: ${computerScore} |`);
+        return;
     }
-    return `Game over! Final results are:\n| your score: ${humanScore} | computer score: ${computerScore} |`;
+
+    let humanChoice = getHumanChoice();
+    let computerChoice = getComputerChoice();
+    let result = playRound(humanChoice, computerChoice);
+
+    console.log(`Round ${round}`);
+    console.log(`Your choice: ${humanChoice}`);
+    console.log(`Computer choice: ${computerChoice}`);
+    console.log(result);
+
+    if (result === "You win!") {
+        humanScore++;
+    } else if ( result === "Computer wins!") {
+        computerScore++;
+    } else if (result == "It's a tie!") {
+        round--;
+    }
+
+    
+     console.log(`Current score: You: ${humanScore} | Computer: ${computerScore}\n************************************`);
+     round++;
+
+     setTimeout(playNextRound, 1000); // Delay the round by 1 second
+    }
+
+    playNextRound();
 }
 
-console.log(playGame());
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Welcome to Rock Paper Scissors! Best out of 5 rounds.");
+    playGame();
+});
