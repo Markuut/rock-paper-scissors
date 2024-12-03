@@ -3,89 +3,97 @@ let computerScore = 0;
 
 function getComputerChoice() {
     let randomNumber = Math.random() * 100;
-    let choice = '';
-    
-    if (randomNumber <= 33.33) {
-        choice = "Rock";
-    } else if (randomNumber > 33.33 && randomNumber <= 66.66) {
-        choice = "Paper";
-    } else {
-        choice = "Scissors";
-    }
-    return choice;
-}
-
-function getHumanChoice() {
-    let chosenNumber = prompt("Enter a number to choose your weapon.\n| Rock = 1 | Paper = 2 | Scissors = 3 |");
-    let choice = '';
-
-    while (chosenNumber !== '1' && chosenNumber  !== '2' && chosenNumber !== '3') {
-        chosenNumber = prompt("Please enter a correct number.\n| Rock = 1 | Paper = 2 | Scissors = 3 | ");
-    }
-
-    if (chosenNumber === '1') {
-        choice = "Rock";
-    } else if (chosenNumber === '2') {
-        choice = "Paper";
-    } else if (chosenNumber === '3') {
-        choice = "Scissors";
-    }
-    return choice;
+    if (randomNumber <= 33.33) return "Rock";
+    if (randomNumber <= 66.66) return "Paper";
+    return "Scissors";
 }
 
 function playRound(humanChoice, computerChoice) {
+    let result;
+
     if (humanChoice === computerChoice) {
-        return "It's a tie!"
+        result = "It's a tie!";
     } else if (
         (humanChoice === "Rock" && computerChoice === "Scissors") ||
         (humanChoice === "Paper" && computerChoice === "Rock") ||
         (humanChoice === "Scissors" && computerChoice === "Paper")
     ) {
-        return "You win!";
+        result = "You win!";
+        humanScore++;
     } else {
-        return "Computer wins!";
+        result = "Computer wins!";
+        computerScore++;
     }
+
+    updateScore();
+    displayResult(result, humanChoice, computerChoice);
+    checkGameOver();
 }
 
-function playGame() {
-    let round = 1;
+function updateScore() {
+    document.querySelector(".score").textContent = `Your score: ${humanScore} | Computer score: ${computerScore}`;
+}
 
-function playNextRound() {
+function displayResult(result, humanChoice, computerChoice) {
+    document.querySelector(".result").textContent = `You chose ${humanChoice}. Computer chose ${computerChoice}. ${result}`;
+}
+
+function checkGameOver() {
     if (humanScore === 3 || computerScore === 3) {
         const winner = humanScore === 3 ? "You are the winner!" : "Computer is the winner!";
-        console.log(`Game over! ${winner}`);
-        console.log(`Final results are:\n| Your score: ${humanScore} | Computer score: ${computerScore} |`);
-        return;
+        document.querySelector(".endgame-result").textContent = `Game over. ${winner}`;
+        showPlayAgainButton();
+        showEndgameScreen();
     }
-
-    let humanChoice = getHumanChoice();
-    let computerChoice = getComputerChoice();
-    let result = playRound(humanChoice, computerChoice);
-
-    console.log(`Round ${round}`);
-    console.log(`Your choice: ${humanChoice}`);
-    console.log(`Computer choice: ${computerChoice}`);
-    console.log(result);
-
-    if (result === "You win!") {
-        humanScore++;
-    } else if ( result === "Computer wins!") {
-        computerScore++;
-    } else if (result == "It's a tie!") {
-        round--;
-    }
-
-    
-     console.log(`Current score: You: ${humanScore} | Computer: ${computerScore}\n************************************`);
-     round++;
-
-     setTimeout(playNextRound, 1000); // Delay the round by 1 second
-    }
-
-    playNextRound();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Welcome to Rock Paper Scissors! Best out of 5 rounds.");
-    playGame();
-});
+function showEndgameScreen(playerWon) {
+    const container = document.querySelector(".endgame-result");
+
+    const crownImg = document.createElement("img");
+    crownImg.src = "images/crown.png";
+    crownImg.alt = "Crown";
+
+    crownImg.style.width = "100px";
+    crownImg.style.marginTop = "10px";
+
+    container.appendChild(crownImg);
+}
+
+function showPlayAgainButton() {
+    const container = document.querySelector(".game-container");
+    container.innerHTML = ""; 
+
+    const playAgainButton = document.createElement("button");
+    playAgainButton.textContent = "Play Again";
+    playAgainButton.addEventListener("click", resetGame);
+
+    container.appendChild(playAgainButton);
+}
+
+function resetGame() {
+    humanScore = 0;
+    computerScore = 0;
+
+    const container = document.querySelector(".game-container");
+    container.innerHTML = `
+        <button class="btn rock"><img src="images/rock.png">
+            </button>
+        <button class="btn paper"><img src="images/paper.png">
+            </button>
+        <button class="btn scissors"><img src="images/scissors.png">
+            </button>
+    `;
+
+    document.querySelector(".score").textContent = "Your score: 0 | Computer score: 0";
+    document.querySelector(".result").textContent = "Choose your weapon to start the game!";
+    document.querySelector(".endgame-result").textContent = "";
+
+    document.querySelector(".rock").addEventListener("click", () => playRound("Rock", getComputerChoice()));
+    document.querySelector(".paper").addEventListener("click", () => playRound("Paper", getComputerChoice()));
+    document.querySelector(".scissors").addEventListener("click", () => playRound("Scissors", getComputerChoice()));
+}
+
+document.querySelector(".rock").addEventListener("click", () => playRound("Rock", getComputerChoice()));
+document.querySelector(".paper").addEventListener("click", () => playRound("Paper", getComputerChoice()));
+document.querySelector(".scissors").addEventListener("click", () => playRound("Scissors", getComputerChoice()));

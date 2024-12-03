@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors - game</title>
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Rock Paper Scissors - game</h1>
-    <p>Works only on console. Open by pressing 'F12'</p>
-        
-    
-    <script src="gameLogic.js"></script> 
+
+    <h1>Rock Paper Scissors</h1>
+    <p>Best out of 5 wins the game!</p>
+    <div class="game-container">
+        <button class="btn rock"><img src="images/rock.png">
+            </button>
+        <button class="btn paper"><img src="images/paper.png">
+            </button>
+        <button class="btn scissors"><img src="images/scissors.png">
+            </button>
+    </div>
+    <div class="score">Your score: 0 | Computer score: 0</div>
+    <div class="result">Choose your weapon to start the game!</div>
+    <div class="endgame-result"></div>
+
+
+    <script src="gameLogic.js"></script>
 </body>
 </html>
